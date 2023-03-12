@@ -1,8 +1,10 @@
 import { useState } from "react";
 
+import styles from "./WebContainer.module.css";
+
 interface WebContainerProps {
   url?: string | null
-  fallback?: React.ElementType
+  busy?: React.ElementType
   error?: React.ElementType
 }
 
@@ -28,9 +30,9 @@ interface WebContainerProps {
  */
 export function WebContainer(props: WebContainerProps) {
   return (
-    <>
+    <div className={styles.main}>
     hello
-    </>
+    </div>
   );
 }
 
