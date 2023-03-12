@@ -1,0 +1,5 @@
+export function MFRender() {
+  return (
+    <></>
+  );
+}
