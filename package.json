@@ -1,11 +1,14 @@
 {
   "name": "@poppy/web-container",
-  "version": "0.0.1",
+  "version": "0.0.1-rc.1",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clean": "rimraf dist/",
+    "copy-files": "copyfiles -u 1 'src/**/*.{css,png,d.ts}' 'dist/'",
     "test": "echo ''",
-    "storybook": "start-storybook -p 6006 -s public",
+    "build": "npm run clean && tsc && npm run copy-files",
+    "start": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
   "repository": {
@@ -37,6 +40,7 @@
     "@typescript-eslint/parser": "^5.54.1",
     "babel-loader": "^8.3.0",
     "babel-plugin-named-exports-order": "^0.0.2",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
@@ -62,6 +66,10 @@
   "engines": {
     "node": ">=18.0.0"
   },
+  "files": [
+    "dist",
+    "!dist/**/*.{test,stories}.{js,d.ts}"
+  ],
   "eslintConfig": {
     "overrides": [
       {
