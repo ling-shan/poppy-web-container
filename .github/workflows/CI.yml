@@ -24,6 +24,7 @@ jobs:
     - run: npm ci --ignore-scripts
     - run: npm run lint
     - run: npm test
+    - run: npm build
       env:
         CI: true
     - run: npm run build --if-present
