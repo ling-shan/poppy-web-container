@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { getPathURLByURLObject, getAbsURLObject, urlSearchParamsToObject } from "../../../../utils/url";
 import { importWebModule } from "../../../../utils/webModule";
 
