@@ -14,7 +14,7 @@
     "deploy": "npm run build && npm publish --access public"
   },
   "publishConfig": {
-    "registry": "https://registry.npm.org/"
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",
