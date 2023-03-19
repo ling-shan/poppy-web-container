@@ -6,10 +6,11 @@
   "scripts": {
     "clean": "rimraf dist/",
     "copy-files": "copyfiles -u 1 'src/**/*.{css,png,d.ts}' 'dist/'",
+    "lint": "eslint src",
     "test": "echo ''",
     "build": "npm run clean && tsc && npm run copy-files",
     "start": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build:storybook": "build-storybook -s public"
   },
   "repository": {
     "type": "git",
