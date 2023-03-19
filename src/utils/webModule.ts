@@ -4,8 +4,8 @@ import { baseURL, getAbsURLByBaseURL } from "./url";
 type WebModuleInstanceCleanFunction = CallableFunction;
 
 interface WebModuleInstanceFactoryContext {
-  container: string | HTMLElement
   webModule: WebModule
+  container?: HTMLElement
   params?: Record<string, any>
   [key: string]: any
 }

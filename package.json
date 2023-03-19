@@ -1,8 +1,8 @@
 {
   "name": "@x-poppy/web-container",
-  "version": "0.0.1-rc.1",
+  "version": "0.0.1-rc.2",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/main.js",
   "scripts": {
     "clean": "rimraf dist/",
     "copy-files": "copyfiles -u 1 'src/**/*.{css,png,d.ts}' 'dist/'",
@@ -12,6 +12,9 @@
     "start": "start-storybook -p 6006 -s public",
     "build:storybook": "build-storybook -s public",
     "deploy": "npm run build && npm publish --access public"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npm.org/"
   },
   "repository": {
     "type": "git",
