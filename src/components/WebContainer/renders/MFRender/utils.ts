@@ -87,6 +87,7 @@ const loadFile = (files, callback, errorCallback, isDelete, crossOrigin) => {
       });
 
       if (typeof errorCallback === "function") errorCallback(resList);
+
       if (countInfo.rest <= 0 && typeof callback === "function") {
         callback(resList);
         awaitCallbakList.forEach((item) => {
@@ -111,7 +112,9 @@ const loadFile = (files, callback, errorCallback, isDelete, crossOrigin) => {
       js: "src",
       css: "href",
     };
-    if (!tagMapping[fileType]) return;
+    if (!tagMapping[fileType]) {
+      throw new Error(`"${link}" Is not a valid resource url.`);
+    }
     const item = document.createElement(tagMapping[fileType]);
     const idName = fileName + "." + fileType;
     if (typeMapping[fileType] === "css") {
@@ -125,21 +128,10 @@ const loadFile = (files, callback, errorCallback, isDelete, crossOrigin) => {
     const el = document.getElementById(idName);
     if (el) {
       countInfo.skip += 1;
-      awaitCallbakList.push({
-        fn: () => {
-          countInfo.rest -= 1;
-          resList.push({
-            event: null,
-            link,
-            status: "skip",
-          });
-          if (countInfo.rest <= 0 && typeof callback === "function") {
-            callback(resList);
-          }
-        },
-        args: [],
-        link,
-      });
+      countInfo.rest -= 1;
+      if (countInfo.rest <= 0 && typeof callback === "function") {
+        callback(resList);
+      }
       return;
     }
 
@@ -253,22 +245,50 @@ export const getMfInfo = (name) => {
   return mfInfo as null | { scope: string; module: string };
 };
 
-export const loadMfModule = (name, target = window): Promise<any> => {
-  return new Promise((rs, rj) => {
-    const mfInfo = getMfInfo(name);
-    const mfVar = target[mfInfo?.scope] as
-      | undefined
-      | {
-          get(module): Promise<() => any>;
+const scopeInitMap = {};
+
+export const loadMfModule = (
+  name,
+  scopes?: Record<string, any>,
+  target = window
+): Promise<any> => {
+  return new Promise(async (rs, rj) => {
+    try {
+      const mfInfo = getMfInfo(name);
+      const mfVar = target[mfInfo?.scope] as
+        | undefined
+        | {
+            get(module): Promise<() => any>;
+            init(shareScopes): Promise<() => any>;
+          };
+
+      if (!mfVar) {
+        throw new Error(`scope "${mfInfo?.scope}" is not exist.`);
+      }
+
+      // init 只执行一次
+      if (
+        !scopeInitMap[mfInfo?.scope] &&
+        mfVar &&
+        typeof mfVar?.init === "function" &&
+        Object.prototype.toString.call(scopes) === "[object Object]"
+      ) {
+        await __webpack_init_sharing__("default");
+        __webpack_share_scopes__.default = {
+          ...__webpack_share_scopes__.default,
+          ...scopes,
         };
-    if (mfVar && typeof mfVar.get === "function") {
-      mfVar
-        .get(mfInfo?.module)
-        .then((factory) => {
-          const module = factory();
-          rs(module?.default || module);
-        })
-        .catch(rj);
+        await mfVar?.init(__webpack_share_scopes__.default);
+        scopeInitMap[mfInfo?.scope] = true;
+      }
+
+      if (mfVar && typeof mfVar.get === "function") {
+        const factory = await mfVar.get(mfInfo?.module);
+        const module = factory();
+        rs(module?.default || module);
+      }
+    } catch (error) {
+      rj(error);
     }
   });
 };

@@ -2,21 +2,26 @@ import React, { useState, useEffect } from "react";
 import {
   loadDep,
   loadModule,
-  isValidComponent,
   isMf,
   loadMfModule,
+  isValidComponent,
 } from "./utils";
 
 export interface MFRenderProps {
   /** 资源地址，js/css */
   url: string | string[];
-  /** 用于监控报错，非必须 */
-  crossOrigin?: false | "anonymous" | "use-credentials";
+
   /** 组件名，
-   * MF："name/module"
+   * MF："scope/module"
    * UMD："globalVar"
    *  */
   componentName: string;
+
+  /** 开启资源跨域，用于监控js报错 */
+  crossOrigin?: false | "anonymous" | "use-credentials";
+
+  /** MF模块的共享实例 */
+  scopes?: Record<string, any>;
 }
 
 export function MFRender({
@@ -24,45 +29,76 @@ export function MFRender({
   url,
   crossOrigin = false,
   componentName,
+  scopes,
   ...rest
 }: React.PropsWithChildren<MFRenderProps>) {
   const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [ComponentRef, setComponentRef] = useState<{
     value?: React.ComponentType;
-  }>({
-    value: loadModule(componentName),
+  }>(() => {
+    const module = loadModule(componentName);
+    // 避免函数被转为元素
+    return {
+      value: isValidComponent(module) ? module : undefined,
+    };
   });
   const { value: Component } = ComponentRef;
 
   useEffect(() => {
-    if (isValidComponent(Component)) {
-      return;
-    }
     setLoading(true);
     setErrorMsg(null);
     loadDep(url, { crossOrigin })
-      .then(() => {
-        if (isMf(componentName)) {
-          loadMfModule(componentName).then((module) => {
-            setLoading(false);
-            setComponentRef({
-              value: module,
-            });
-          });
-          return;
+      .then((res) => {
+        const hasLoadError =
+          Array.isArray(res) && res.some((item) => item.status === "error");
+        if (hasLoadError) {
+          throw new Error("url load fail.");
         }
-        const module = loadModule(componentName);
-        setLoading(false);
-        setComponentRef({
-          value: module,
-        });
+        setLoaded(true);
       })
       .catch((error) => {
+        setLoaded(false);
         setLoading(false);
         setErrorMsg(error.message);
       });
-  }, [Component, componentName, url]);
+  }, [url, crossOrigin]);
+
+  useEffect(() => {
+    if (!loaded) return;
+    (async () => {
+      try {
+        if (!componentName) {
+          throw new Error("componentName is empty.");
+        }
+        let module;
+        const isMfModule = isMf(componentName);
+        if (isMfModule) {
+          setLoading(true);
+          setErrorMsg(null);
+          // scope/module
+          module = await loadMfModule(componentName, scopes);
+        } else {
+          // globalVar
+          module = loadModule(componentName);
+        }
+        if (isValidComponent(module)) {
+          setLoading(false);
+          setComponentRef({
+            value: module,
+          });
+        } else {
+          throw new Error(
+            `componentName: "${componentName}", target is not a valid component.`
+          );
+        }
+      } catch (error: any) {
+        setLoading(false);
+        setErrorMsg(error.message);
+      }
+    })();
+  }, [loaded, componentName, scopes]);
 
   if (loading) return <span>loading...</span>;
 
