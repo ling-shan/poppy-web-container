@@ -1,19 +1,19 @@
-import React from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { getAbsPathURLObject, getPathURLByURLObject } from 'utils/url'
+import { RenderComponentProps, RenderTypes, getRegisteredRender } from './renderRegistory'
 
-interface WebContainerProps {
-  url?: string | null
-  busy?: React.ElementType
-  error?: React.ElementType
+interface WebContainerProps extends RenderComponentProps {
+  className?: string
 }
 
 /**
  * WebContainer is an micro-frontend solution, which is support for mutiple mime type
  *
  * Resource render mapping
- * //xxxxx.html -> html render
+ * //xxxxx.html?pasdasd&asdasdasd -> html render
  * //xxxxx.md | makrdown -> markdown render
- * //xxxxx.json  -> dynamic render schema we can decide the final render continer when the json schema loaded so it's dynamic.
- *
+ * //assets-manifest.json?xxx  ->
+ * //.remote-entry.js?xxxx=xxxx
  * Steps:
  * 1. loaded the content from the url
  * 2. get the resource type from url suffix or response type(response type has hight priority than url suffix)
@@ -27,9 +27,31 @@ interface WebContainerProps {
  * @returns
  */
 export function WebContainer(props: WebContainerProps) {
+  const [renderContent, setCurrentContent] = useState<ReactElement | null>(null);
+
+  useEffect(() => {
+    let renderType = "";
+
+    const pathUrl = getPathURLByURLObject(getAbsPathURLObject(props.url ?? ""));
+    if (pathUrl.endsWith(".html")) {
+      renderType = RenderTypes.HTML;
+    } else if (pathUrl.endsWith("asset-manifest.js")) {
+      renderType = RenderTypes.WebModule;
+    } else if (pathUrl.endsWith(".md") || pathUrl.endsWith(".markdown")) {
+      renderType = RenderTypes.WebModule;
+    } else if (pathUrl.endsWith(".rtext")) {
+      renderType = RenderTypes.RichText;
+    }
+
+    const RenderComponent = getRegisteredRender(renderType);
+    setCurrentContent(
+      <RenderComponent url={props.url} error={props.error} loading={props.loading} />
+    );
+  }, [props.url]);
+
   return (
-    <div>
-      hello
+    <div className={props.className}>
+      { renderContent }
     </div>
   );
 }

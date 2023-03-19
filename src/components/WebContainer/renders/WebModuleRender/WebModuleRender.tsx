@@ -1,22 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef } from "react";
-import { getPathURLByURLObject, getAbsURLObject, urlSearchParamsToObject } from "../../../../utils/url";
+import { getPathURLByURLObject, getAbsPathURLObject, urlSearchParamsToObject } from "../../../../utils/url";
 import { importWebModule } from "../../../../utils/webModule";
+import { RenderComponentProps, RenderTypes, registerRender } from "components/WebContainer/renderRegistory";
+import { useRenderState } from "components/WebContainer/useRenderState";
 
-interface WebModuleRenderProps {
+interface WebModuleRenderProps extends RenderComponentProps {
   className?: string
-  url?: string,
 }
 
 export function WebModuleRender(props: WebModuleRenderProps) {
   const ref = useRef<HTMLElement>();
+  const renderState = useRenderState();
 
   useEffect(() => {
-    if (!ref.current) {
+    if (!props.url) {
+      renderState.setState({
+        loading: false,
+        error: false,
+        content: null
+      })
       return;
     }
 
-    if (!props.url) {
+    if (!ref.current) {
       return;
     }
 
@@ -25,7 +32,7 @@ export function WebModuleRender(props: WebModuleRenderProps) {
     // load and create an instance.
     (async () => {
       try {
-        const targetUrl =  getAbsURLObject(props.url as string);
+        const targetUrl =  getAbsPathURLObject(props.url as string);
         const targetUrlSearchParams = urlSearchParamsToObject(targetUrl.searchParams);
         const webModuleUrl = getPathURLByURLObject(targetUrl);
         const webModule = await importWebModule(webModuleUrl);
@@ -35,17 +42,36 @@ export function WebModuleRender(props: WebModuleRenderProps) {
             webModule,
             params: targetUrlSearchParams
           })
-        }``
+          renderState.setState({
+            loading: false,
+            error: false,
+            content: null
+          })
+        }
       } catch(err) {
-        console.error("webModule Load Error", err);
+        renderState.setState({
+          loading: false,
+          error: true,
+          content: null
+        })
       }
     })();
     return () => {
       webModuleInstClean?.();
     }
-  }, [])
+  }, [props.url])
+
+  if (renderState.state.loading) {
+    return props.loading;
+  }
+
+  if (renderState.state.error) {
+    return props.error;
+  }
 
   return (
     <div ref={ref as any} className={props.className}/>
   );
 }
+
+registerRender(RenderTypes.Markdown, WebModuleRender);

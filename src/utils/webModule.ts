@@ -191,7 +191,9 @@ export async function importWebModule(webModuleUrl: string, webModuleName?: stri
   return webModule;
 }
 
-export function startWebModule(factory: WebModuleInstanceFactory): void {
+let currentWebModule: WebModule | null;
+
+function initWebModule() {
   let currentScript = document.currentScript;
   if (!currentScript) {
     const scripts = document.querySelectorAll("script");
@@ -200,16 +202,31 @@ export function startWebModule(factory: WebModuleInstanceFactory): void {
     }
   }
 
-  const identify = currentScript?.getAttribute("data-identify") ?? "";
-  if (identify) {
-    const webModule = get(identify);
-    if (webModule) {
-      __webpack_public_path__ = webModule.publicPath ?? "./";
-      webModule.factory = factory;
-    }
+  const webModuleIdentify = currentScript?.getAttribute("data-identify") ?? "";
+  if (!webModuleIdentify) {
     return;
   }
-  factory();
+
+  currentWebModule = get(webModuleIdentify) ?? null;
+  if (!currentWebModule) {
+    return;
+  }
+
+  try {
+    __webpack_public_path__ = currentWebModule.publicPath ?? "./";
+  // eslint-disable-next-line no-empty
+  } catch (err) {
+  }
+}
+
+initWebModule();
+
+export function startWebModule(factory: WebModuleInstanceFactory): void {
+  if (!currentWebModule) {
+    factory();
+    return;
+  }
+  currentWebModule.factory = factory;
 }
 
 

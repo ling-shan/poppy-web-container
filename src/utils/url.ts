@@ -28,7 +28,7 @@ export function getConcatURLObject(url: string, baseURL: string) {
 }
 
 export function baseURL(url: string) {
-  return new URL("./", getAbsURLObject(url)).href;
+  return new URL("./", getAbsPathURLObject(url)).href;
 }
 
 export function isAbsURL(url: string)  {
@@ -44,12 +44,12 @@ export function isAbsURL(url: string)  {
 }
 
 export function getAbsURLByBaseURL(url: string, baseUrl: string) {
-  const baseUrlOb = getAbsURLObject(baseUrl);
-  const urlObj = getAbsURLObject(url);
+  const baseUrlOb = getAbsPathURLObject(baseUrl);
+  const urlObj = getAbsPathURLObject(url);
   return new URL(concatPaths(baseUrlOb.pathname, urlObj.pathname), baseUrlOb).href;
 }
 
-export function getAbsURLObject(url: string) {
+export function getAbsPathURLObject(url: string) {
   return new URL((url), location.origin + location.pathname)
 }
 
