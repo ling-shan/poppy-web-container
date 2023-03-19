@@ -204,9 +204,7 @@ export function startWebModule(factory: WebModuleInstanceFactory): void {
   if (identify) {
     const webModule = get(identify);
     if (webModule) {
-      if (typeof __webpack_public_path__ !== "undefined") {
-        __webpack_public_path__ = webModule.publicPath
-      }
+      __webpack_public_path__ = webModule.publicPath ?? "./";
       webModule.factory = factory;
     }
     return;
