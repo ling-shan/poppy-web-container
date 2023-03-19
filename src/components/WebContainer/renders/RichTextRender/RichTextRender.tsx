@@ -19,9 +19,7 @@ export function RichTextRender(props: RenderComponentProps) {
   }
 
   return (
-    <div>
-      <div dangerouslySetInnerHTML={{__html: renderState.state.content ?? ''}} />
-    </div>
+    <div dangerouslySetInnerHTML={{__html: renderState.state.content ?? ''}} />
   );
 }
 
