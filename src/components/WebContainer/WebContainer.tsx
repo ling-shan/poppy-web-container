@@ -1,10 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
-
-const HostStyleWrapper = styled.div`
-  width: 100%;
-  width: 100%;
-`
 
 interface WebContainerProps {
   url?: string | null
@@ -34,9 +28,9 @@ interface WebContainerProps {
  */
 export function WebContainer(props: WebContainerProps) {
   return (
-    <HostStyleWrapper>
+    <div>
       hello
-    </HostStyleWrapper>
+    </div>
   );
 }
 

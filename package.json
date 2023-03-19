@@ -1,6 +1,6 @@
 {
   "name": "@x-poppy/web-container",
-  "version": "0.0.1-rc.4",
+  "version": "0.0.1-rc.5",
   "description": "",
   "main": "./dist/main.js",
   "scripts": {
@@ -41,7 +41,6 @@
     "@storybook/react": "^6.5.16",
     "@storybook/testing-library": "^0.0.13",
     "@types/react": "^18.0.28",
-    "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
     "babel-loader": "^8.3.0",
@@ -66,7 +65,6 @@
     "react-markdown": "^8.0.5",
     "react-scripts": "^5.0.1",
     "remark-gfm": "^3.0.1",
-    "styled-components": "^5.3.9",
     "tslib": "^2.5.0"
   },
   "engineStrict": false,

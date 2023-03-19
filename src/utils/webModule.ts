@@ -131,8 +131,7 @@ async function loadJavaScript(asset: AssetAttributes) {
     script.src = asset.url;
     script.type = asset.type;
     script.setAttribute("data-identify", asset["data-identify"])
-
-    document.body.appendChild(script);
+    document.head.appendChild(script);
   })
 }
 
@@ -147,7 +146,7 @@ async function loadCss(asset: AssetAttributes) {
       resolve(undefined);
     }
     script.href = asset["href"];
-    document.body.appendChild(script);
+    document.head.appendChild(script);
   })
 }
 
