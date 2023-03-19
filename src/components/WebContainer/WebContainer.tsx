@@ -1,6 +1,9 @@
-import { useState } from "react";
+import styled from 'styled-components'
 
-import styles from "./WebContainer.module.css";
+const HostStyleWrapper = styled.div`
+  width: 100%;
+  width: 100%;
+`
 
 interface WebContainerProps {
   url?: string | null
@@ -30,9 +33,9 @@ interface WebContainerProps {
  */
 export function WebContainer(props: WebContainerProps) {
   return (
-    <div className={styles.main}>
-    hello
-    </div>
+    <HostStyleWrapper>
+      hello
+    </HostStyleWrapper>
   );
 }
 
