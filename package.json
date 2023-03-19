@@ -17,9 +17,6 @@
     "type": "git",
     "url": "git+https://github.com/ling-shan/poppy-web-container.git"
   },
-  "publishConfig": {
-    "registry": "https://registry.npm.org/"
-  },
   "author": "",
   "license": "MIT",
   "bugs": {
