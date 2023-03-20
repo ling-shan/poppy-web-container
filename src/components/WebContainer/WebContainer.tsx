@@ -16,10 +16,17 @@ interface WebContainerProps {
  * WebContainer is an micro-frontend solution, which is support for mutiple mime type
  *
  * Resource render mapping
- * //xxxxx.html?name=3&page=test -> html render
- * //xxxxx.md | makrdown -> markdown render
- * //xxxxx.assets-manifest.json?xxx  ->
- * //xxxxx.remote-entry.js?xxxx=xxxx
+ *
+ * 1. xxxxx.html?name=3&page=test -> html render
+ * 2. xxxxx.md | makrdown -> markdown render
+ * 3. xxxxx.assets-manifest.json?xxx  ->
+ * 4. xxxxx.remote-entry.js?xxxx=xxxx
+ *
+ * Example:
+ *
+ * 1. https://oss.hecode.cc/poppy-assets/LongMusicB.html
+ * 2. https://oss.hecode.cc/poppy-assets/longMusicB.md
+ * 3. https://oss.hecode.cc/poppy-assets/react-app-demo/asset-manifest.json
  *
  * @param porps
  * @returns
