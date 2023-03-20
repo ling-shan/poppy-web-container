@@ -96,10 +96,11 @@ async function loadHTMLOrAssetManifest(url: string): Promise<AssetAttributes[]> 
     const entrypoints: string[] = jsonContent?.entrypoints ?? [];
     entrypoints.forEach((entrypoint) => {
       const ext = (/\.(css|js)$/.exec(entrypoint) || [])[1];
+      const assetsUrl = getAbsURLByBaseURL(entrypoint, baseUrl);
       if (ext === "js") {
         results.push({
           tag: "script",
-          url: getAbsURLByBaseURL(entrypoint, baseUrl),
+          url: assetsUrl,
           async: "",
           type: "text/javascript",
           "data-identify": url,
@@ -107,10 +108,11 @@ async function loadHTMLOrAssetManifest(url: string): Promise<AssetAttributes[]> 
       } else if (ext === "css") {
         results.push({
           tag: "link",
-          href: getAbsURLByBaseURL(entrypoint, baseUrl),
+          href: assetsUrl,
         })
       }
     })
+    return results;
   }
 
   throw new Error("InvalidEntry");
