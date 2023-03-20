@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.15551f72.css","mappings":"AAAA;AACA;AACA;AACA","sources":["webpack://@x-poppy/web-container/./src/components/WebContainer/renders/HTMLRender/HTMLRender.module.css"],"sourcesContent":[".main {\n  width: 100%;\n  border: none;\n}\n"],"names":[],"sourceRoot":""}
