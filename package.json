@@ -1,6 +1,6 @@
 {
   "name": "@x-poppy/web-container",
-  "version": "0.0.1-rc.8",
+  "version": "0.0.1-rc.9",
   "description": "",
   "main": "./dist/main.js",
   "scripts": {

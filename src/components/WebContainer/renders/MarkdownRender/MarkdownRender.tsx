@@ -1,8 +1,9 @@
-import { RenderComponentProps, RenderTypes, registerRender } from 'components/WebContainer/renderRegistory';
-import { useLoadTextRender } from 'components/WebContainer/useLoadTextRender';
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+
+import { RenderComponentProps, RenderTypes, registerRender } from '../../renderRegistory';
+import { useLoadTextRender } from '../../hooks/useLoadTextRender';
 
 const remarkPlugins = [
   [remarkGfm, { singleTilde: false }]
@@ -16,22 +17,9 @@ const remarkPlugins = [
  * @returns
  */
 export function MarkdownRender(props: RenderComponentProps) {
-  const renderState = useLoadTextRender(props);
-
-  if (renderState.state.loading) {
-    return props.loading;
-  }
-
-  if (renderState.state.error) {
-    return props.error;
-  }
-
-  if (!renderState.state.content) {
-    return null;
-  }
-
+  const content = useLoadTextRender(props);
   return (
-    <ReactMarkdown children={renderState.state.content ?? ''} remarkPlugins={remarkPlugins}/>
+    <ReactMarkdown children={content} remarkPlugins={remarkPlugins}/>
   );
 }
 

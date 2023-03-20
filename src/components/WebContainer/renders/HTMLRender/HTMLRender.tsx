@@ -1,25 +1,16 @@
-import { RenderComponentProps, RenderTypes, registerRender } from 'components/WebContainer/renderRegistory';
-import { useLoadTextRender } from 'components/WebContainer/useLoadTextRender';
 import React from 'react';
 
+import { RenderComponentProps, RenderTypes, registerRender } from '../../renderRegistory';
+import { useLoadTextRender } from '../../hooks/useLoadTextRender';
+
+import styles from "./HTMLRender.module.css";
+
 function HTMLRender(props: RenderComponentProps) {
-  const renderState = useLoadTextRender(props);
-
-  if (renderState.state.loading) {
-    return props.loading;
-  }
-
-  if (renderState.state.error) {
-    return props.error;
-  }
-
-  if (!renderState.state.content) {
-    return null;
-  }
-
+  const content = useLoadTextRender(props);
   return (
     <iframe
-      srcDoc={renderState.state.content ?? undefined}
+      className={styles.main}
+      srcDoc={content}
     />
   );
 }

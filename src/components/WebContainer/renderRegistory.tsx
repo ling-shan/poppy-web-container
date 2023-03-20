@@ -1,21 +1,18 @@
 import React, { ElementType, FunctionComponent, ReactNode } from "react";
 
-import './renders/HTMLRender';
-import './renders/MarkdownRender';
-import './renders/RichTextRender';
-import './renders/WebModuleRender';
-
-export const RenderTypes = {
-  HTML: "html",
-  Markdown: "markdown",
-  RichText: "richText",
-  WebModule: "webModule",
+export enum RenderTypes {
+  HTML = "html",
+  Markdown = "markdown",
+  RichText = "richText",
+  WebModule = "webModule",
+  None = 'none'
 }
 
 export interface RenderComponentProps {
-  url?: string
-  loading?: ReactNode
-  error?: ReactNode
+  url: string
+  onLoad?: () => void
+  onReady?: () => void
+  onError?: () => void
 }
 
 function DefaultRender() {
@@ -27,10 +24,10 @@ export type RenderElement = ElementType<RenderComponentProps>;
 
 const renderMapper: Record<string, RenderComponentType> = {} as  any;
 
-export function registerRender(key: string, component: any) {
+export function registerRender(key: RenderTypes, component: any) {
   renderMapper[key] = component;
 }
 
-export function getRegisteredRender(key: string):RenderComponentType {
+export function getRegisteredRender(key: RenderTypes):RenderComponentType {
   return renderMapper[key] ?? DefaultRender;
 }
