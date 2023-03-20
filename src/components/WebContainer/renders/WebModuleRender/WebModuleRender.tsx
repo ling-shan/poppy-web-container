@@ -5,7 +5,6 @@ import { useLoadWebModuleRenderState } from "../../hooks/useLoadWebModuleRenderS
 
 export function WebModuleRender(props: RenderComponentProps) {
   const ref = useLoadWebModuleRenderState(props);
-
   return (
     <div ref={ref as any} style={{width: "100%", height: "100%"}}/>
   );

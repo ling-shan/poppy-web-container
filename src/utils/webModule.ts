@@ -60,12 +60,8 @@ async function loadHTMLOrAssetManifest(url: string): Promise<AssetAttributes[]> 
     }
   });
 
-  // eslint-disable-next-line no-debugger
-debugger;
-
   const baseUrl = baseURL(url);
-// eslint-disable-next-line no-debugger
-debugger;
+
   const contentType = responseResult.headers.get("Content-Type");
   const results: AssetAttributes[] = [];
   // for html
@@ -75,8 +71,6 @@ debugger;
     const scriptList = htmlDoc.querySelectorAll("script[src]");
     scriptList.forEach((element) => {
       const jsElement = (element as HTMLScriptElement);
-      // eslint-disable-next-line no-debugger
-      debugger;
       results.push({
         tag: "script",
         url: getAbsURLByBaseURL(jsElement.src, baseUrl),
@@ -118,6 +112,7 @@ debugger;
         })
       }
     })
+    return results;
   }
 
   throw new Error("InvalidEntry");

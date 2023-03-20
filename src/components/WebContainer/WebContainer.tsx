@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getAbsPathURLObject, getPathURLByURLObject } from '../../utils/url'
-import { RenderComponentProps, RenderTypes } from './renderRegistory'
+import { RenderTypes } from './renderRegistory'
 
 import { ProxyRender } from './renders/ProxyRender';
 
@@ -11,7 +11,6 @@ interface WebContainerProps {
   onReady?: () => void
   onError?: () => void
 }
-
 
 /**
  * WebContainer is an micro-frontend solution, which is support for mutiple mime type
