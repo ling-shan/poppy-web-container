@@ -1,5 +1,10 @@
 const PathReg = /^(?:\/*)([^/].*)$/;
 
+/**
+ * simple contact path
+ * @param segments
+ * @returns
+ */
 export function concatPaths(...segments: string[]) {
   let result = segments[0];
   for (let i = 1; i < segments.length; i++) {
@@ -27,7 +32,7 @@ export function getConcatURLObject(url: string, baseURL: string) {
   return new URL((url), baseURL).href;
 }
 
-export function baseURL(url: string) {
+export function baseURL(url: string): string {
   return new URL("./", getAbsPathURLObject(url)).href;
 }
 
@@ -44,13 +49,14 @@ export function isAbsURL(url: string)  {
 }
 
 export function getAbsURLByBaseURL(url: string, baseUrl: string) {
-  const baseUrlOb = getAbsPathURLObject(baseUrl);
-  const urlObj = getAbsPathURLObject(url);
-  return new URL(concatPaths(baseUrlOb.pathname, urlObj.pathname), baseUrlOb).href;
+  if (isAbsURL(url)) {
+    return url;
+  }
+  return concatPaths(baseUrl, url);
 }
 
 export function getAbsPathURLObject(url: string) {
-  return new URL((url), location.origin + location.pathname)
+  return new URL(url, location.origin + location.pathname)
 }
 
 export function getPathURLByURLObject(url: URL) {
